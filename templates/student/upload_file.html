@@ -1,0 +1,53 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>Upload File</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+
+        <h2 class="mt-2 text-center">Add Student Records from File</h2>
+        <hr class="bg-danger"/>
+
+        <!-- Back to Home page button -->
+        <a class="btn btn-primary" 
+            href="{% url 'student:allstudentslist'%}"    
+            style="width:auto">
+            Back
+        </a>
+
+        {% if error %}
+            <div class="mt-2 alert alert-danger text-white bg-danger">
+                {{error}}
+            </div>
+        {% endif %}
+
+        <!-- Upload file Form -->
+        <form action="{%url 'student:postuploadfile'%}" method="post" enctype="multipart/form-data">
+            {%  csrf_token  %}
+            <div class="card mt-2">
+                <div class="card-header bg-dark text-white">Upload File</div>
+                <div class="card-body bg-light">
+                    <div class="row">
+                        <div class="col form-group">
+                            <label class="form-label" for="uploadFile">Upload File (Excel Sheet only)</label>
+                            <div class="input-group">
+                                <input class="form-control" type="file" name="uploadFile" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-success" type="submit">Insert Records</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>
+        </form>
+
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>

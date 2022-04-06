@@ -1,0 +1,25 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>Page Not Found</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+
+        <div class="mt-5 text-center text-khaki display-4">
+            Requested Page Not Found
+        </div>
+        <div class="mt-1 display-1 text-center">
+            <div>\(o_o)/</div>
+            <div>|__|</div>
+            <div>_/ \_</div>    
+        </div>
+
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>

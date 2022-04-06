@@ -1,0 +1,119 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>Delete Student Record</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+
+        <!-- Alert Message -->
+        <div class="mt-2 text-center h2 mb-3">
+            Are you sure you want to delete this record?
+        </div>
+
+        <!-- View Student's Personal Information -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Personal Information
+            </div>
+            <div class="card-body bg-light">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><b>Batch Year:</b></td>
+                            <td>{{student_obj.batch_year}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Student Id:</b></td>
+                            <td>{{student_obj.id_no}}</td>
+                            <td><b>Name:</b></td>
+                            <td>{{student_obj.name}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Branch:</b></td>
+                            <td>{{student_obj.branch}}</td>
+                            <td><b>Admission Category:</b></td>
+                            <td>{{student_obj.admission_category}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Gender:</b></td>
+                            <td>{% if student_obj.gender == 'M' %} Male {% else %} Female {% endif %}</td>
+                            <td><b>Cast Category:</b></td>
+                            <td>{{student_obj.cast_category}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Date of Birth:</b></td>
+                            <td>{{student_obj.dob}}</td>
+                            <td><b>Email ID:</b></td>
+                            <td>{{student_obj.email_id}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Contact No. 1:</b></td>
+                            <td>{{student_obj.contact_no_1}}</td>
+                            <td><b>Contact No. 2:</b></td>
+                            {% if student_obj.contact_no_2 %}
+                                <td>{{student_obj.contact_no_2}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><b>City:</b></td>
+                            <td>{{student_obj.city}}</td>
+                            <td><b>State:</b></td>
+                            <td>{{student_obj.state}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="row text-center mt-3">
+            <!-- Cancel and Go Back -->
+            <div class="col">
+                <a class="btn btn-primary mb-3" 
+                    href="{% url 'student:viewstudent' id=student_obj.id_no %}"
+                    style="width:auto">
+                    Cancel and Go Back
+                </a>
+            </div>
+            <div class="col">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Delete Record
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Alert!</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                This will permanently delete the record of "<b>{{student_obj.name}}</b>"
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form action="{% url 'student:removestudent'%}" method="post">
+                                    {%  csrf_token  %}
+                                    <input type="hidden" name="id_no" value={{student_obj.id_no}}>
+                                    <button type="submit" class="btn btn-danger" >Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>

@@ -1,0 +1,212 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>Filter Student Records</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+
+        <h2 class="mt-2 text-center">Filter Student Records</h2>
+        <hr class="bg-danger"/>
+
+        <div class="d-flex flex-row justify-content-between mt-3">
+            <div>
+                <a class="btn btn-primary"
+                    href="{% url 'student:allstudentslist'%}">
+                    Back
+                </a>
+            </div>
+            <div>
+                {%if filter_results.filterFlag %}
+                <a class="btn btn-warning" name="reset" href="{% url 'student:filterstudent' %}"
+                    style="cursor: pointer;">
+                    Clear Filters
+                </a>
+                {%endif%}
+            </div>
+        </div>
+
+        <!-- Display error messages -->
+        {% if filter_results.errMsg %}
+            <div class="mt-2 alert alert-danger text-white bg-danger">
+                {{filter_results.errMsg}}
+            </div>
+        {% endif %}
+
+        <!-- Filter Student Form -->
+        {%if not filter_results.filterFlag %}
+            <form action="{%url 'student:filterresults'%}" method="get">
+                <div class="card mt-2">
+                    <div class="card-header bg-dark text-white">Filter Student Records</div>
+                    <div class="card-body bg-light">
+                        <div class="row mt-1">
+                            <!-- Batch Year -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="batch_year">Batch Year</label>
+                                <input type="number" class="form-control" name="batch_year" 
+                                    placeholder="Year when student graduated"
+                                    step="1" min="2000"/>
+                            </div>
+                            <!-- Branch -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="branch">Branch</label>
+                                <select class="form-select" name="branch">
+                                    <option value="">Select Branch</option>
+                                    <option value="CE">CE</option>
+                                    <option value="CH">CH</option>
+                                    <option value="CL">CL</option>
+                                    <option value="IT">IT</option>
+                                    <option value="EC">EC</option>
+                                    <option value="IC">IC</option>
+                                    <option value="ME">ME</option>
+                                </select>
+                            </div>
+                            <!-- CPI -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="cpi">CPI</label>
+                                <input type="number" class="form-control" name="cpi" 
+                                    min="0" max="10" step="0.01" placeholder="Students with CPI >="/>
+                            </div>
+                            <!-- Company name -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="company_name">Company</label>
+                                <input type="text" class="form-control" name="company_name" placeholder="Internship / Placement"/>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <!-- Career Preference -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="career_preference">Career Preference</label>
+                                <select class="form-select" name="career_preference" >
+                                    <option value="">Select Career Preference</option>
+                                    <option value="J">Job</option>
+                                    <option value="H">Higher Studies</option>
+                                </select>
+                            </div>
+                            <!-- Gender -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="gender">Gender</label>
+                                <select class="form-select" name="gender" >
+                                    <option value="">Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                            <!-- Admission Category -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="admission_category">Admission Category</label>
+                                <select class="form-select" name="admission_category" >
+                                    <option value="">Select Admission Category</option>
+                                    <option value="SF">SF</option>
+                                    <option value="GIA">GIA</option>
+                                    <option value="TFW">TFW</option>
+                                    <option value="NRI">NRI</option>
+                                </select>
+                            </div>
+                            <!-- Cast Category -->
+                            <div class="col-lg form-group">
+                                <label class="form-label" for="cast_category">Cast Category</label>
+                                <select class="form-select" name="cast_category" >
+                                    <option value="">Select Cast Category</option>
+                                    <option value="Open">Open</option>
+                                    <option value="SEBC">SEBC</option>
+                                    <option value="SC">SC</option>
+                                    <option value="ST">ST</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Submit button -->
+                <div class="mt-3 form-group text-center">
+                    <a class="btn btn-warning" name="reset" href="{% url 'student:filterstudent' %}"
+                        style="cursor: pointer;">
+                        Clear
+                    </a>
+                    <input type="submit" value="Filter" class="btn btn-success" name="submit">
+                </div>
+            </form>
+        {%endif%}
+
+        <!-- Display Filter Results -->
+        {%if filter_results.filterFlag %}
+            <!-- Show filtered options -->
+            <div class="mt-2 mb-2 alert alert-info">
+                <h4 class="mt-1 mb-2">{{filter_results.totalFilterResults}} Student Results Found having filters:-</h4>
+                <div class="row">
+                    {%if request.GET.batch_year %}
+                        <li class="col">    
+                            <i>Batch Year</i> : <b>{{request.GET.batch_year}}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.branch %}
+                        <li class="col">
+                            <i>Branch</i> : <b>{{request.GET.branch}}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.cpi %}
+                        <li class="col">
+                            <i>CPI</i> : <b>{{request.GET.cpi}}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.company_name %}
+                        <li class="col">
+                            <i>Company</i> : <b>{{request.GET.company_name}}</b>
+                        </li>
+                    {%endif%}
+                </div>
+                <div class="row">
+                    {%if request.GET.career_preference %}
+                        <li class="col">    
+                            <i>Career Preference</i> : <b>{% if request.GET.career_preference == 'J' %} Job {%elif request.GET.career_preference == 'H'%} Higher Studies {%endif%}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.gender %}
+                        <li class="col">
+                            <i>Gender</i> : <b>{%if request.GET.gender == 'M'%} Male {%else%} Female {%endif%}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.admission_category %}
+                        <li class="col">
+                            <i>Admission Category</i> : <b>{{request.GET.admission_category}}</b>
+                        </li>
+                    {%endif%}
+                    {%if request.GET.cast_category %}
+                        <li class="col">
+                            <i>Cast Category</i> : <b>{{request.GET.cast_category}}</b>
+                        </li>
+                    {%endif%}
+                </div>
+            </div>
+            <!-- Show filter results -->
+            <div class="list-group">
+                {% for s in filter_results.students %}
+                    <a class="list-group-item bg-light border mb-2"
+                        href="{% url 'student:viewstudent' id=s.id_no %}"
+                        style="cursor: pointer;">
+                        <div class="row">
+                            <div class="col">
+                                <i>ID</i> : <b>{{s.id_no}}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <i>Name</i> : <b>{{s.name}}</b>
+                            </div>
+                            <div class="col">
+                                <i>Contact</i> : <b>{% if s.contact_no_1 %} {{s.contact_no_1 | floatformat}} {% else %} {{s.contact_no_2 | floatformat}} {%endif%}</b>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>

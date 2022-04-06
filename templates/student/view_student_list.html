@@ -1,0 +1,202 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>Students List</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+        
+        <h2 class="mt-2 mb-2 text-center">Students</h2>
+        <!-- <hr class="bg-dark" /> -->
+
+        <div class="d-md-flex align-items-baseline">
+            <!-- Add Student button -->
+            <div class="p-1 btn-group">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Manage Student
+                </button>
+                <ul class="dropdown-menu bg-light" aria-labelledby="dropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'student:uploadfile'%}"
+                        style="width:auto">
+                            Upload File
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'student:addstudent'%}"    
+                        style="width:auto">
+                            Student Registration Form
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'student:updatemultiplestudentrecords'%}"
+                        style="width:auto">
+                            Update Multiple Records
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Search box -->
+            <div class="me-auto p-1 bd-highlight flex-fill">
+                <form action="{% url 'student:searchstudent' %}" method="GET" value="{{request.GET.q}}">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="q" id="searchString" 
+                            placeholder="Search student records by Student ID, Name or Company"
+                            value="{{request.GET.q}}" required>
+                        <div class="input-group-append">
+                            <input type="submit" class="btn btn-secondary" name="submit" value="Search"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Apply filters -->
+            <div class="p-1 btn-group">
+                <a class="btn btn-primary" href="{% url 'student:filterstudent'%}">
+                    Apply Filters
+                </a>
+            </div>
+        </div>
+
+        <!-- Show search results -->
+        {% if search_results.searchFlag %}
+            <h4 class="mt-1 mb-2">{{search_results.totalSearchResults}} Search Results Found</h4>
+            <div class="list-group">
+                {% for s in search_results.students %}
+                    <a class="list-group-item bg-light border mb-2"
+                        href="{% url 'student:viewstudent' id=s.id_no %}"
+                        style="cursor: pointer;">
+                        <div class="row">
+                            <div class="col">
+                                <i>ID</i> : <b>{{s.id_no}}</b>
+                            </div>
+                            <div class="col">
+                                <i>Batch Year</i> : <b>{{s.batch_year}}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <i>Name</i> : <b>{{s.name}}</b>
+                            </div>
+                            <div class="col">
+                                <i>Contact</i> : <b>{% if s.contact_no_1 %} {{s.contact_no_1 | floatformat}} {% else %} {{s.contact_no_2 | floatformat}} {%endif%}</b>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            {% if search_results.totalSearchResults == 0 %}
+                <div class="card mt-3">
+                    <div class="card-header bg-light">
+                        No student records found with word '<b>{{request.GET.q}}</b>'
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    
+        <!-- Student list -->
+        {%if student_list %}
+            <!-- Total students -->
+            <div class="row mb-3 mt-3">
+                <div class="col font-weight-bold">
+                    <b>Total Student Records : {{ totalStudents }}</b>
+                </div>
+            </div>
+            <!-- Student list -->
+            <table class="table table-hover">
+                <!-- Student header -->
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Branch</th>
+                        <th>Admission Category</th>
+                        <th>Batch Year</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <!-- Student rows -->
+                <tbody>
+                    {%for student in student_list%}
+                        <tr>
+                            <td>
+                                <a href="{% url 'student:viewstudent' id=student.id_no %}">{{student.id_no}}</a>
+                            </td>
+                            <td>{{student.name}}</td>
+                            <td>{{student.branch}}</td>
+                            <td>{{student.admission_category}}</td>
+                            <td>{{student.batch_year}}</td>
+                            <td>
+                                {% if student.contact_no_1 %} {{student.contact_no_1 | floatformat}} {% else %} {{student.contact_no_2 | floatformat}} {%endif%}
+                            </td>
+                        </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        {% else %}
+            {% if totalStudents == 0 %}
+                <div class="card">
+                    <div class="card-header text-dark">
+                        Student list is empty
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <!--Pagination-->
+        {% if totalStudents > 10 %}
+            <nav aria-label="Page navigation for students">
+                <ul class="pagination justify-content-center">
+                    {% if student_list.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ student_list.previous_page_number }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% if student_list.number|add:'-4' > 1 %}
+                        <li class="page-item"><a class="page-link" href="?page={{ student_list.number|add:'-5' }}">&hellip;</a></li>
+                    {% endif %}
+
+                    {% for i in student_list.paginator.page_range %}
+                        {% if student_list.number == i %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">
+                                    {{ i }}
+                                </span>
+                            </li>
+                        {% elif i > student_list.number|add:'-5' and i < student_list.number|add:'5' %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if student_list.paginator.num_pages > student_list.number|add:'4' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ student_list.number|add:'5' }}">&hellip;</a></li>
+                    {% endif %}
+
+                    {% if student_list.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ student_list.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+        <!--End of Pagination-->
+        
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>

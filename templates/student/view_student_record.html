@@ -1,0 +1,273 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>View Student Record</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+    <body>
+        <!-- Header part -->
+        {% include 'student/_header.html' %}
+
+        <!-- View Student Record -->
+        <h3 class="mt-2 text-center">Student: {{student_obj.student.name}}</h3>
+        <hr class="bg-danger" />
+
+        <!-- Back to Home button -->
+        <div class="d-flex flex-row justify-content-between mt-3">
+            <div>
+                <a class="btn btn-primary mb-3" 
+                    href="{% url 'student:allstudentslist'%}"    
+                    style="width:auto">
+                    Back
+                </a>
+            </div>
+            <div>
+                <a class="btn btn-primary mb-3" 
+                    href="{% url 'student:updatestudent' id=student_obj.student.id_no %}"    
+                    style="width:auto">
+                    Update
+                </a>
+                <a class="btn btn-danger mb-3" 
+                    href="{% url 'student:deletestudent' id=student_obj.student.id_no %}"    
+                    style="width:auto">
+                    Delete
+                </a>
+            </div>
+        </div>
+
+        <!-- View Student's Personal Information -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Personal Information
+            </div>
+            <div class="card-body bg-light">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><b>Student Id:</b></td>
+                            <td>{{student_obj.student.id_no}}</td>
+                            <td><b>Name:</b></td>
+                            <td>{{student_obj.student.name}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Branch:</b></td>
+                            <td>{{student_obj.student.branch}}</td>
+                            <td><b>Admission Category:</b></td>
+                            <td>{{student_obj.student.admission_category}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Gender:</b></td>
+                            <td>{% if student_obj.student.gender == 'M' %} Male {% else %} Female {% endif %}</td>
+                            <td><b>Cast Category:</b></td>
+                            <td>{{student_obj.student.cast_category}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Date of Birth:</b></td>
+                            <td>{{student_obj.student.dob}}</td>
+                            <td><b>Email ID:</b></td>
+                            <td>{{student_obj.student.email_id}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Contact No. 1:</b></td>
+                            <td>{{student_obj.student.contact_no_1 | floatformat}}</td>
+                            <td><b>Contact No. 2:</b></td>
+                            {% if student_obj.student.contact_no_2 %}
+                                <td>{{student_obj.student.contact_no_2 | floatformat}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View Student's Address Information -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Address Information
+            </div>
+            <div class="card-body bg-light">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><b>Address 1:</b></td>
+                            <td>{{student_obj.student.address_1}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Address 2:</b></td>
+                            {% if student_obj.student.address_2 %}
+                                <td>{{student_obj.student.address_2}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><b>Address 3:</b></td>
+                            {% if student_obj.student.address_3 %}
+                                <td>{{student_obj.student.address_3}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><b>City:</b></td>
+                            <td>{{student_obj.student.city}}</td>
+                        </tr>
+                        <tr>    
+                            <td><b>State:</b></td>
+                            <td>{{student_obj.student.state}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Pin code:</b></td>
+                            <td>{{student_obj.student.pin_code | floatformat }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View Student's Academic Information -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Academic Information
+            </div>
+            <div class="card-body bg-light">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><b>SSC Result:</b></td>
+                            <td>{{student_obj.student.ssc_result}}</td>
+                            <td><b>HSC Result:</b></td>
+                            <td>{{student_obj.student.hsc_result}}</td>
+                            <td><b>Diploma Result:</b></td>
+                            <td>{{student_obj.student.diploma_result}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>CPI:</b></td>
+                            <td>{{student_obj.student.cpi}}</td>                    
+                            <td><b>SPI Sem 1:</b></td>
+                            <td>{{student_obj.student.spi_sem_1}}</td>
+                            <td><b>SPI Sem 2:</b></td>
+                            <td>{{student_obj.student.spi_sem_2}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>SPI Sem 3:</b></td>
+                            <td>{{student_obj.student.spi_sem_3}}</td>
+                            <td><b>SPI Sem 4:</b></td>
+                            <td>{{student_obj.student.spi_sem_4}}</td>
+                            <td><b>SPI Sem 5:</b></td>
+                            <td>{{student_obj.student.spi_sem_5}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>SPI Sem 6:</b></td>
+                            <td>{{student_obj.student.spi_sem_6}}</td>
+                            <td><b>SPI Sem 7:</b></td>
+                            <td>{{student_obj.student.spi_sem_7}}</td>
+                            <td><b>SPI Sem 8:</b></td>
+                            <td>{{student_obj.student.spi_sem_8}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Batch Year:</b></td>
+                            <td>{{student_obj.student.batch_year}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View Student's Career Information -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Career Information
+            </div>
+            <div class="card-body bg-light">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><b>Career Preference:</b></td>
+                            {% if student_obj.student.career_preference == 'J' %} 
+                                <td>Job</td>
+                            {% elif student_obj.student.career_preference == 'H' %}
+                                <td>Higher Studies</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            <td><b>Internship:</b></td>
+                            {% if student_obj.student.internship %}
+                                <td>{{student_obj.student.internship}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><b>Placement:</b></td>
+                            {% if student_obj.student.placement %}
+                                <td>{{student_obj.student.placement}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            <td><b>Salary:</b></td>
+                            {% if student_obj.student.salary %}
+                                <td>{{student_obj.student.salary}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><b>Other Placement 1:</b></td>
+                            {% if student_obj.student.other_placement_1 %}
+                                <td>{{student_obj.student.other_placement_1}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            <td><b>Other Placement 2:</b></td>
+                            {% if student_obj.student.other_placement_2 %}
+                                <td>{{student_obj.student.other_placement_2}}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View Student's skill -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Skills
+            </div>
+            <div class="card-body bg-light">
+                {% if student_obj.skills %}
+                    {%for stu in student_obj.skills %}
+                        <li>{{stu.skills}}</li>
+                    {% endfor %}
+                {% else %}
+                    <i>No Skills</i>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- View Student's achievements -->
+        <div class="card mb-3">
+            <div class="card-header text-white bg-dark">
+                Student's Achievements
+            </div>
+            <div class="card-body bg-light">
+                {% if student_obj.achievements %}
+                    {%for stu in student_obj.achievements %}
+                        <li>{{stu.achievement_details}}</li>
+                    {% endfor %}
+                {% else %}
+                    <i>No achievements</i>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Footer part -->
+        {% include 'student/_footer.html' %}
+    </body>
+</html>
